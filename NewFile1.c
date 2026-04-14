@@ -1,0 +1,16 @@
+#include <stdio.h>
+
+int main() {
+    char name[] = "Fidan";
+    int age = 17;
+    char school[] = "British Gymnasium of Technology";
+    float gpa = 5.0;
+
+    printf("=== STUDENT PROFILE ===\n");
+    printf("Name: %s\n", name);
+    printf("Age: %d\n", age);
+    printf("School: %s\n", school);
+    printf("GPA: %.1f\n", gpa);
+
+    return 0;
+}
