@@ -1,0 +1,146 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 5
+
+typedef enum {
+    FILLUAR = 1,
+    NE_PROGRES,
+    PERFUNDUAR
+} Status;
+
+struct Progres {
+    char emri[50];
+    int pike;
+    float nota;
+    Status status;
+};
+
+void printStatus(Status s) {
+    switch(s) {
+        case FILLUAR: printf("Filluar"); break;
+        case NE_PROGRES: printf("Ne progres"); break;
+        case PERFUNDUAR: printf("Perfunduar"); break;
+        default: printf("I panjohur");
+    }
+}
+
+// FUNKSIONI I RI: RAPORTI
+void raport(struct Progres lista[], int count) {
+    if (count == 0) {
+        printf("Nuk ka te dhena per analize!\n");
+        return;
+    }
+
+    int perfunduar = 0;
+    float shumaNota = 0;
+    float maxNota = lista[0].nota;
+    float minNota = lista[0].nota;
+
+    for (int i = 0; i < count; i++) {
+        shumaNota += lista[i].nota;
+
+        if (lista[i].status == PERFUNDUAR) {
+            perfunduar++;
+        }
+
+        if (lista[i].nota > maxNota) {
+            maxNota = lista[i].nota;
+        }
+
+        if (lista[i].nota < minNota) {
+            minNota = lista[i].nota;
+        }
+    }
+
+    float mesatarja = shumaNota / count;
+
+    printf("\n--- RAPORT ANALITIK ---\n");
+    printf("Totali i regjistrimeve: %d\n", count);
+    printf("Te perfunduara: %d\n", perfunduar);
+    printf("Mesatarja e notave: %.2f\n", mesatarja);
+    printf("Nota me e larte: %.2f\n", maxNota);
+    printf("Nota me e ulet: %.2f\n", minNota);
+
+    // KLASIFIKIM ME IF/ELSE
+    if (mesatarja >= 9) {
+        printf("Performanca: Shkelqyeshem\n");
+    } else if (mesatarja >= 7) {
+        printf("Performanca: Mire\n");
+    } else if (mesatarja >= 5) {
+        printf("Performanca: Mesatare\n");
+    } else {
+        printf("Performanca: Duhet permiresim\n");
+    }
+}
+
+int main() {
+    struct Progres lista[MAX];
+    int count = 0;
+    int zgjedhja;
+
+    do {
+        printf("\n--- MENU ---\n");
+        printf("1. Shto regjistrim\n");
+        printf("2. Shfaq te gjitha\n");
+        printf("3. Raport analitik\n"); // OPSION I RI
+        printf("4. Dil\n");
+        printf("Zgjedhja: ");
+
+        scanf("%d", &zgjedhja);
+
+        switch(zgjedhja) {
+
+            case 1:
+                if (count >= MAX) {
+                    printf("Arrite maksimumin!\n");
+                    break;
+                }
+
+                printf("Emri: ");
+                scanf(" %[^\n]", lista[count].emri);
+
+                printf("Piket: ");
+                scanf("%d", &lista[count].pike);
+
+                printf("Nota: ");
+                scanf("%f", &lista[count].nota);
+
+                int s;
+                do {
+                    printf("1.Filluar  2.Ne progres  3.Perfunduar: ");
+                    scanf("%d", &s);
+
+                    if (s >= 1 && s <= 3) {
+                        lista[count].status = (Status)s;
+                    } else {
+                        printf("Zgjedhje e pavlefshme!\n");
+                    }
+                } while (s < 1 || s > 3);
+
+                count++;
+                break;
+
+            case 2:
+                for (int i = 0; i < count; i++) {
+                    printf("\n%s | %d | %.2f | ", lista[i].emri, lista[i].pike, lista[i].nota);
+                    printStatus(lista[i].status);
+                }
+                break;
+
+            case 3:
+                raport(lista, count); // THIRRJA E RAPORTIT
+                break;
+
+            case 4:
+                printf("Dalje...\n");
+                break;
+
+            default:
+                printf("Zgjedhje e pavlefshme!\n");
+        }
+
+    } while (zgjedhja != 4);
+
+    return 0;
+}
